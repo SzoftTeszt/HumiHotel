@@ -1,0 +1,59 @@
+<!-- {{foglalasok|json}} -->
+<button (click)="ujFoglalas()"  type="button" class="btn btn-primary my-5">Új Foglalás</button>
+<div class="row my-5">
+    <div *ngFor="let oszlop of oszlopok" class="col">
+        {{oszlop.text}}
+    </div>
+    <div class="col">
+        Műveletek
+    </div>
+</div>
+
+<div *ngFor="let foglalas of foglalasok; even as paros" [ngClass]="{parosok:paros}" class="row py-1 my-2">
+    <div *ngFor="let oszlop of oszlopok" class="col">
+        {{foglalas[oszlop.key]}}
+    </div>
+
+    <div class="col">
+        <div class="row text-center">
+            <div class="col-6">
+                <button (click)="modositas(foglalas)" type="button" class="btn btn-warning">Módosít</button>
+            </div>
+            <div class="col-6">
+                <button (click)="delete(foglalas)" type="button" class="btn btn-danger">Töröl</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<app-modal id="modal-1">
+    <div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">
+            <ng-container *ngIf="foglalas.id; else uj">Foglalás módosítása</ng-container>
+            <ng-template #uj>Új foglalás</ng-template>
+        </h4>
+		<button (click)="closeModal()" type="button" class="btn-close" aria-label="Close"></button>
+	</div>
+	<div class="modal-body">
+		
+        <div *ngFor="let oszlop of oszlopok" class="form-group">
+            <ng-container *ngIf="oszlop.text=='Azon'; else adat">
+                <ng-container *ngIf="foglalas.id">
+                    Azonosító: {{foglalas.id}}
+                    <input [(ngModel)]="foglalas[oszlop.key]" type="hidden" class="form-control" [id]="oszlop.text">
+                </ng-container>
+            </ng-container>
+            <ng-template #adat>
+                <label [for]="oszlop.text">{{oszlop.text}}</label>
+                <input [(ngModel)]="foglalas[oszlop.key]" type="text" class="form-control" [id]="oszlop.text">
+            </ng-template>
+        </div>
+
+
+	</div>
+	<div class="modal-footer">
+		<button type="button" (click)="saveModal()" class="btn btn-outline-dark">Ment</button>
+		<button type="button" (click)="closeModal()" class="btn btn-outline-dark">Bezár</button>
+	</div>
+</app-modal>
